@@ -1,2 +1,2 @@
-# Linear-Regression
-Linear Regression , real time examples
+# Linear-Regression_Univariate
+Linear Regression , real time examples using octave
