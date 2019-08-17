@@ -1,0 +1,74 @@
+% Linear regression for health index of indian state
+% based on 2011 census data
+
+%load the data set
+clear ; close all; clc
+source = dlmread('Literacy_and_Health.csv',',',3,1);
+printf('Here is the source dataset..\n')
+source()
+
+%ploting data to see the relationship
+literacy = source(:,1);
+health = source(:,2);
+
+plot(literacy,health,'rx','MarkerSize',10)
+xlabel('literacy_rate')
+ylabel('health')
+
+% Need to compute (theta0 and theta1) %
+% let's test by some random theta0 and theta1 value...%
+m = length(health);
+x = [ones(m,1),literacy,literacy.^2];   % adding column ones to make it compatible for matrix operation
+y = health;
+
+%initialize theta as 0 now and see whats the computed cost
+%later we will use gradient descend to optimize it 
+theta = zeros(3,1);
+
+J = (1 / (2*m) ) * sum(((x * theta)-y).^2);
+printf('computed cost value is : %f\n' , J)
+
+%run gradient descent algorithm...%
+%parameter needed below...
+x = [ones(m,1),literacy,literacy.^2];   % adding column ones to make it compatible for matrix operation
+y = health;
+%manually setting gradient desecnt key parameter
+iterations = 150;
+alpha = 0.000000001;  %learning rate
+theta = zeros(3,1);
+%actual algorithm..
+J_history = zeros(iterations, 1);
+
+for iter = 1:iterations
+     error = (x * theta) - y; 
+    temp0 = theta(1) - ( alpha /m ) * sum(error.* x(:,1));
+    temp1 = theta(2) - ( alpha /m ) * sum(error.* x(:,2));
+    temp3 = theta(3) - ( alpha /m ) * sum(error.* x(:,3));
+    theta = [temp0; temp1;temp3];
+    J_history(iter) = (1 / (2*m) ) * sum(((x * theta)-y).^2);
+
+end
+
+fprintf('Theta found by gradient descent:\n');
+fprintf('%f\n', theta);
+
+% Plot the linear fit
+hold on; % keep previous plot visible
+plot(x(:,2), x*(theta), '-')
+legend('Training data', 'Linear regression')
+hold off % don't overlay any more plots on this figure
+
+% Predict values for literacy rate of 55 and 77
+predict1 = [1, 63,55^2] *theta;
+fprintf('For literacy = 63, we predict a health of %f\n',...
+    predict1);
+predict2 = [1, 77,77^2] * theta;
+fprintf('For literacy = 77, we predict a health of %f\n',...
+    predict2);
+
+fprintf('Program paused. Press enter to continue.\n');
+pause;
+
+
+
+
