@@ -1,0 +1,66 @@
+%Annual rainfall india 1901 to 2013
+%% ======================= Part 2: Plotting =======================
+fprintf('Plotting Data ...\n')
+source = dlmread('Rain_Training.csv',',',1,0);
+X = source(:, 1); y = source(:, 2);
+m = length(y); % number of training examples
+
+% Plot Data
+plot(X,y,'rx');
+hold on;
+line(X, y);
+xlabel('year')
+ylabel('rain')
+
+fprintf('Program paused. Press enter to continue.\n');
+pause;
+
+% Need to compute (theta0 and theta1) %
+% let's test by some random theta0 and theta1 value...%
+m = length(y);
+x = [ones(m,1),X];   % adding column ones to make it compatible for matrix operation
+
+%initialize theta as 0 now and see whats the computed cost
+%later we will use gradient descend to optimize it 
+theta = zeros(2,1);
+
+J = (1 / (2*m) ) * sum(((x * theta)-y).^2);
+printf('computed cost value is : %f\n') 
+
+%run gradient descent algorithm...%
+%parameter needed are... x, y, theta,alpha,iteration
+
+iterations = 150000
+alpha = 0.00000001
+
+%actual algorithm..
+J_history = zeros(iterations, 1);
+
+for iter = 1:iterations
+    error = (x * theta) - y; 
+    temp0 = theta(1) - ( alpha /m ) * sum(error.* x(:,1));
+    temp1 = theta(2) - ( alpha /m ) * sum(error.* x(:,2));
+    theta = [temp0; temp1];
+    J_history(iter) = (1 / (2*m) ) * sum(((x * theta)-y).^2);
+
+end
+
+fprintf('Theta found by gradient descent:\n');
+fprintf('%f\n', theta);
+
+% Plot the linear fit
+hold on; % keep previous plot visible
+plot(x(:,2), x*(theta), '-')
+legend('Training data', 'Linear regression')
+hold off % don't overlay any more plots on this figure
+
+% Predict rain for year 2011 and 1999
+predict1 = [1, 2011] *theta;
+fprintf('For year = 2011, we predict rainfall of %f\n',...
+    predict1);
+predict2 = [1, 1999] *theta;
+fprintf('For year = 1999, we predict rainfall of %f\n',...
+    predict2);
+
+fprintf('Program paused. Press enter to continue.\n');
+pause;
