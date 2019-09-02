@@ -1,6 +1,7 @@
 **Linear Regression 🤖🤩
 
-##Univariate Linear Regression
+##
+Univariate Linear Regression
 
 Applications
 — Heart rate vs life expectancy
